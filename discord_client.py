@@ -1,3 +1,4 @@
+import io
 import logging
 import re
 import typing
@@ -131,7 +132,7 @@ class DiscordClient:
 
 		logging.info(f"Member {DiscordClient.discord_user_to_full_name(interaction.user)} asked for the member count of {'all roles' if role_name is None else 'role ' + role_name}.")
 
-		if not self.role_cache:
+		if not self.role_cache or not self.role_cache.get(interaction.guild_id):
 			await self._update_role_cache(interaction.guild)
 
 		if len(self.role_cache) == 0:
@@ -145,7 +146,16 @@ class DiscordClient:
 					len(role.members)
 				])
 
-			await interaction.response.send_message(f"```\n{result_table.get_string(sortby='Member Count', reversesort=True)}\n```")
+			message = result_table.get_string(sortby='Member Count', reversesort=True)
+			if len(message) >= 2000:
+				with io.BytesIO() as f:
+					f.write(message.encode())
+					f.flush()
+					f.seek(0)
+					await interaction.response.send_message(file=discord.File(fp=f, filename="result.txt"))
+			else:
+				await interaction.response.send_message(f"```\n{message}\n```")
+
 			return
 
 		role_name_sanitized = role_name.replace("@", "")
@@ -159,7 +169,7 @@ class DiscordClient:
 		await interaction.response.send_message(f"The role {role_name_sanitized} has {len(role.members)} members.")
 
 	async def _count_members_autocomplete(self, interaction: discord, current: str):
-		if not self.role_cache:
+		if not self.role_cache or not self.role_cache.get(interaction.guild_id):
 			await self._update_role_cache(interaction.guild)
 
 		choices = []
