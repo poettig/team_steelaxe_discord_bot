@@ -1,0 +1,15 @@
+{
+	"discord_bot_token": "",
+	"reaction_roles": [
+		{
+			"emoji": "👍",
+			"message-id": 12345,
+			"role-id": 67890
+		},
+		{
+			"emoji": 123,
+			"message-id": 456,
+			"role-id": 789
+		}
+	]
+}
