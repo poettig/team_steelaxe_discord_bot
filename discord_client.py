@@ -61,10 +61,6 @@ class DiscordClient:
 		async def on_guild_role_delete(role: discord.Role):
 			await self._update_role_cache(role.guild)
 
-		@self.client.event
-		async def on_guild_role_update(_, role: discord.Role):
-			await self._update_role_cache(role.guild)
-
 		@self.command_tree.command(name="count-members", description="Gets a count members in a role for all roles or the role that was given.")
 		async def count_members(interaction, role: str = None):
 			await self._count_members(interaction, role)
