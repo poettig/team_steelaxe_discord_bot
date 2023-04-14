@@ -32,4 +32,3 @@ class MessageScheduler:
 	def send_discord_message(self, message: str, channel_id: int):
 		channel = self.discord_client.client.get_channel(channel_id)
 		self.discord_client.client.loop.create_task(channel.send(message))
-

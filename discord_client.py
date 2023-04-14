@@ -18,14 +18,17 @@ class DiscordClientConfig:
 			raise ValueError("Reaction roles has to be a list of dicts.")
 
 		for reaction_role in reaction_roles:
-			if not isinstance(reaction_role, dict) or any(key not in DiscordClientConfig.REACTION_ROLE_KEYS for key in reaction_role.keys()):
+			if (
+				not isinstance(reaction_role, dict)
+				or any(key not in DiscordClientConfig.REACTION_ROLE_KEYS for key in reaction_role.keys())
+			):
 				raise ValueError(f"Reaction role has to be a dict containing {', '.join(DiscordClientConfig.REACTION_ROLE_KEYS)}")
 
 			if isinstance(reaction_role["emoji"], str) and reaction_role["emoji"].isdigit():
 				raise ValueError(f"The emoji ID for the custom emoji {reaction_role['emoji']} has to be an int in the config.")
 
 		self.reaction_roles = reaction_roles
-		self.by_message_id = { reaction_role["message-id"]: reaction_role for reaction_role in reaction_roles }
+		self.by_message_id = {reaction_role["message-id"]: reaction_role for reaction_role in reaction_roles}
 
 
 class DiscordClient:
@@ -62,7 +65,10 @@ class DiscordClient:
 		async def on_guild_role_delete(role: discord.Role):
 			await self._update_role_cache(role.guild)
 
-		@self.command_tree.command(name="count-members", description="Gets a count members in a role for all roles or the role that was given.")
+		@self.command_tree.command(
+			name="count-members",
+			description="Gets a count members in a role for all roles or the role that was given."
+		)
 		async def count_members(interaction, role: str = None):
 			await self._count_members(interaction, role)
 
@@ -83,7 +89,10 @@ class DiscordClient:
 
 		return unicode_emoji_matches or custom_emoji_matches
 
-	def _get_member_from_reaction(self, reaction: discord.RawReactionActionEvent) -> typing.Tuple[typing.Optional[discord.Guild], typing.Optional[discord.Member]]:
+	def _get_member_from_reaction(
+		self,
+		reaction: discord.RawReactionActionEvent
+	) -> typing.Tuple[typing.Optional[discord.Guild], typing.Optional[discord.Member]]:
 		guild = self.client.get_guild(reaction.guild_id)
 		if not guild:
 			logging.error("Guild for reacting member not found.")
@@ -96,7 +105,10 @@ class DiscordClient:
 
 		return guild, member
 
-	def _get_message_from_reaction(self, reaction: discord.RawReactionActionEvent) -> typing.Optional[typing.Coroutine[typing.Any, typing.Any, discord.Message]]:
+	def _get_message_from_reaction(
+		self,
+		reaction: discord.RawReactionActionEvent
+	) -> typing.Optional[typing.Coroutine[typing.Any, typing.Any, discord.Message]]:
 		channel = self.client.get_channel(reaction.channel_id)
 		if not channel:
 			logging.error("Could not fetch channel from reaction.")
@@ -128,7 +140,10 @@ class DiscordClient:
 		result_table.align["Role Name"] = "l"
 		result_table.align["Member Count"] = "r"
 
-		logging.info(f"Member {DiscordClient.discord_user_to_full_name(interaction.user)} asked for the member count of {'all roles' if role_name is None else 'role ' + role_name}.")
+		logging.info(
+			f"Member {DiscordClient.discord_user_to_full_name(interaction.user)} asked for the member count of"
+			f" {'all roles' if role_name is None else 'role ' + role_name}."
+		)
 
 		if not self.role_cache or not self.role_cache.get(interaction.guild_id):
 			await self._update_role_cache(interaction.guild)
