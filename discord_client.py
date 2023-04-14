@@ -37,6 +37,7 @@ class DiscordClient:
 
 		self.config = discord_config
 		self.client = discord.Client(intents=intents)
+		self.discord_bot_token = discord_bot_token
 		self.command_tree = discord.app_commands.CommandTree(self.client)
 		self.role_cache = dict()
 
@@ -69,7 +70,8 @@ class DiscordClient:
 		async def count_members_autocomplete(interaction, current):
 			return await self._count_members_autocomplete(interaction, current)
 
-		self.client.run(discord_bot_token, log_handler=None)
+	def start(self):
+		self.client.run(self.discord_bot_token, log_handler=None)
 
 	def _get_reaction_role_by_message(self, reaction: discord.RawReactionActionEvent) -> typing.Optional[dict]:
 		return self.config.by_message_id.get(reaction.message_id, None)

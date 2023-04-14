@@ -1,8 +1,10 @@
 import argparse
 import json
 import logging
+import threading
 
 from discord_client import DiscordClient, DiscordClientConfig
+from message_scheduler import MessageScheduler
 
 
 def setup_logging(verbose: bool, debug: bool):
@@ -29,6 +31,13 @@ def main():
 		"--config-path", "-c", default="config.json",
 		help="The path to the configuration file, default is 'config.json' in the current working directory."
 	)
+	parser.add_argument(
+		"--scheduled-messages-path", "-s", default="scheduled_messages.yml",
+		help=(
+			"The path to the YAML file containing the scheduled messages,"
+			" default is 'scheduled_messages.yml' in the current working directory."
+		)
+	)
 	args = parser.parse_args()
 
 	setup_logging(args.verbose, args.debug)
@@ -37,7 +46,16 @@ def main():
 		config = json.load(fh)
 
 	discord_config = DiscordClientConfig(config.get("reaction_roles"))
-	DiscordClient(config.get("discord_bot_token"), discord_config)
+	discord_client = DiscordClient(config.get("discord_bot_token"), discord_config)
+	discord_thread = threading.Thread(target=discord_client.start)
+	discord_thread.start()
+
+	message_scheduler = MessageScheduler(args.scheduled_messages_path, discord_client)
+	message_scheduler_thread = threading.Thread(target=message_scheduler.start)
+	message_scheduler_thread.start()
+
+	discord_thread.join()
+	message_scheduler_thread.join()
 
 
 if __name__ == "__main__":

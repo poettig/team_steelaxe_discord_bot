@@ -2,3 +2,4 @@
 *.iml
 config.json
 venv
+scheduled_messages.yml
