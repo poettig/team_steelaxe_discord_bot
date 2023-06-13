@@ -1,6 +1,6 @@
 discord~=2.3.0
 inflect~=6.0.4
-prettytable~=3.7.0
+prettytable~=3.8.0
 pyyaml~=6.0
 schedule~=1.2.0
 APScheduler~=3.10.1
