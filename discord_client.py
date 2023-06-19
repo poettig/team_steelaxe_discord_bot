@@ -239,4 +239,4 @@ class DiscordClient:
 
 	@staticmethod
 	def discord_user_to_full_name(user: typing.Union[discord.User, discord.Member, discord.ClientUser]):
-		return f"{user.display_name}#{user.discriminator}"
+		return f"{user.name} ({user.display_name})"
