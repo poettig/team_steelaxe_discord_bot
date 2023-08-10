@@ -1,4 +1,4 @@
-discord==2.3.1
+discord==2.3.2
 prettytable~=3.8.0
 pyyaml~=6.0
 schedule~=1.2.0
