@@ -14,7 +14,7 @@ class DiscordClientConfig:
 	]
 
 	def __init__(self, reaction_roles: typing.List[typing.Dict]):
-		if not reaction_roles or not isinstance(reaction_roles, list):
+		if reaction_roles is None or not isinstance(reaction_roles, list):
 			raise ValueError("Reaction roles has to be a list of dicts.")
 
 		if len(reaction_roles) == 0:
