@@ -20,7 +20,8 @@ class MessageScheduler:
 				self.scheduled_messages = yaml.safe_load(fh)
 
 	def start(self):
-		if len(self.scheduled_messages) == 0:
+		if not self.scheduled_messages or len(self.scheduled_messages) == 0:
+			logging.warning("No scheduled messages configured, will not schedule any messages.")
 			return
 
 		scheduler = BlockingScheduler()

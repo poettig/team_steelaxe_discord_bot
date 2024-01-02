@@ -45,7 +45,7 @@ def main():
 	with open(args.config_path, "r") as fh:
 		config = json.load(fh)
 
-	discord_config = DiscordClientConfig(config.get("reaction_roles"))
+	discord_config = DiscordClientConfig(config.get("reaction_roles", []))
 	discord_client = DiscordClient(config.get("discord_bot_token"), discord_config)
 	discord_thread = threading.Thread(target=discord_client.start)
 	discord_thread.start()

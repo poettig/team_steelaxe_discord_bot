@@ -17,6 +17,9 @@ class DiscordClientConfig:
 		if not reaction_roles or not isinstance(reaction_roles, list):
 			raise ValueError("Reaction roles has to be a list of dicts.")
 
+		if len(reaction_roles) == 0:
+			logging.warning("No reaction roles configured.")
+
 		for reaction_role in reaction_roles:
 			if (
 				not isinstance(reaction_role, dict)
