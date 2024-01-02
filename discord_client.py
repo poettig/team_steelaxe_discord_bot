@@ -15,7 +15,7 @@ class DiscordClientConfig:
 
 	def __init__(self, reaction_roles: typing.List[typing.Dict]):
 		if reaction_roles is None or not isinstance(reaction_roles, list):
-			raise ValueError("Reaction roles has to be a list of dicts.")
+			raise ValueError("The reaction_roles config option has to be a list if it is defined.")
 
 		if len(reaction_roles) == 0:
 			logging.warning("No reaction roles configured.")
